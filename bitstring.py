@@ -13,8 +13,8 @@ class bitstring:
         if type(slicing) is int:
             high_i = low_i = slicing;
         else:
-            high_i = slicing.start;
-            low_i  = slicing.stop;
+            high_i = slicing.start if slicing.start != None else self.width-1 ;
+            low_i  = slicing.stop if slicing.stop != None else 0
         return bitstring( self._val >> low_i, high_i-low_i+1 ) 
 
 
@@ -22,10 +22,10 @@ class bitstring:
         if type(slicing) is int:
             high_i = low_i = slicing;
         else:
-            high_i = slicing.start;
-            low_i  = slicing.stop;
+            high_i = slicing.start if slicing.start != None else self.width-1
+            low_i  = slicing.stop if slicing.stop != None else 0
         if high_i-low_i + 1 < item.width or high_i >= self.width:
-            raise AttributeError("Can't assign bitstrings wider than the slice or")
+            raise AttributeError("Can't assign bitstrings wider than the slice itself")
         clear_mask = ~( (2**(high_i - low_i + 1)-1) << low_i )
         self._val &= clear_mask
         self._val |= item._val << low_i
@@ -47,14 +47,21 @@ class bitstring:
         return self.width == other.width and self._val == other._val
 
     def __add__(self, other):
+        if type(other) is int:
+            return bitstring(self._val + other, self.width)
         width   = max(self.width, other.width);
         val     = self._val + other._val;
         return bitstring(val, width);
     
     def __sub__(self, other):
+        if type(other) is int:
+            return bitstring(self._val - other, self.width)
         width   = max(self.width, other.width);
         val     = self._val + ~(other._val)+1;
         return bitstring(val, width);
+
+    def __radd__(self, other):
+        return self.__add__(other)
     
     def __mul__(self, other):
         width   = max(self.width, other.width);
@@ -67,6 +74,5 @@ class bitstring:
         return bitstring(val, width);
 
 if __name__ =='__main__':
-    a = bitstring(-1)
-    a[7:4] = bitstring(0x2, 2)
-    print(a)
+    a = bitstring(0xAA, 8)
+    print(a, (1+a) )
