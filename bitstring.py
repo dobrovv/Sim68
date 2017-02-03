@@ -24,11 +24,24 @@ class bitstring:
         else:
             high_i = slicing.start if slicing.start != None else self.width-1
             low_i  = slicing.stop if slicing.stop != None else 0
-        if high_i-low_i + 1 < item.width or high_i >= self.width:
+        
+        if type(item) is  int:
+            bit_length = item.bit_length()
+        else:
+            bit_length = item.width
+
+        if high_i-low_i + 1 < bit_length:
             raise AttributeError("Can't assign bitstrings wider than the slice itself")
+        elif higt_i >= self.width or low_i < 0:
+            raise AttributeError("Slice is out of the  bound")
+
         clear_mask = ~( (2**(high_i - low_i + 1)-1) << low_i )
         self._val &= clear_mask
-        self._val |= item._val << low_i
+        if type(item) is int:
+           val = item % 2**(high_i-low_i+1) 
+        else:
+            val = item._val
+        self._val |= val << low_i
         return self
 
     def msb(self):
@@ -44,6 +57,8 @@ class bitstring:
             return bitstring(new_value, new_width)
 
     def __eq__(self, other):
+        if type(other) is int:
+            return self.width >= other.bit_length() and self._val == other
         return self.width == other.width and self._val == other._val
 
     def __add__(self, other):
@@ -74,5 +89,6 @@ class bitstring:
         return bitstring(val, width);
 
 if __name__ =='__main__':
-    a = bitstring(0xAA, 8)
-    print(a, (1+a) )
+    a = bitstring(16, 8)
+    print(a[4:0] == 16)
+

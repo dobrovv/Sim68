@@ -14,9 +14,19 @@ class Sim68:
         
         self.mem = mem_controler
 
-    
-    def fetch():
-        self.MAR = self.PC
+
+    def _fetch(self):
+        self.MAR = self.PC[:]
+        self.MBR[7:0]  = bitstring(mem.read(self.MAR), 8)
+        self.MBR[16:8] = bitstring(mem.read(self.MAR+1), 8)
+        self.IR = self.MBR[:]
+
+    def _decode(self):
+        pass
+
+    def _execute(self):
+        if self.IR[]
+
 
 
 mem = MemoryController(2**24)
