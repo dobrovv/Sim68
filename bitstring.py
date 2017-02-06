@@ -32,7 +32,7 @@ class bitstring:
 
         if high_i-low_i + 1 < bit_length:
             raise AttributeError("Can't assign bitstrings wider than the slice itself")
-        elif higt_i >= self.width or low_i < 0:
+        elif high_i >= self.width or low_i < 0:
             raise AttributeError("Slice is out of the  bound")
 
         clear_mask = ~( (2**(high_i - low_i + 1)-1) << low_i )
