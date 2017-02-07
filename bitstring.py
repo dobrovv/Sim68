@@ -44,8 +44,21 @@ class bitstring:
         self._val |= val << low_i
         return self
 
-    def msb(self):
-        return self[self.width-1] 
+    
+    def sign(self):
+        return self[self.width-1] == bitstring(1,1) 
+
+
+    def val(self, signed=True):
+        if signed and self.sign():
+            return -1 * self.complement(True)._val
+        else:
+            return self._val
+
+
+    def complement(self, two_s=True):
+        new_val = ~(self._val) + two_s
+        return bitstring(new_val, self.width)
     
     def extend(self, width, signed=False):
         new_width = max(width, self.width)

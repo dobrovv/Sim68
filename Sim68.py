@@ -45,6 +45,14 @@ class Sim68:
                 self.D[dst_n][15:0] = result
 
 
+    def _execute_add(a, b):
+        width = max(a.width, b.width)
+        
+        result = 
+        if 
+
+    result = a + b
+    
 
 mem_ctrl = MemoryController()
 mem_ctrl.map_device(Memory(2**16), range(0, 2**16))
@@ -52,7 +60,7 @@ proc = Sim68(mem_ctrl)
 
 
 mem_ctrl.devices[0].M[0] = 0b11010000 
-mem_ctrl.devices[0].M[1] = 0b01000001
+mem_ctrl.0].M[1] = 0b01000001
 proc.D[0][:] = 3
 proc.D[1][:] = 10
 
