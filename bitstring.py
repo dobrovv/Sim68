@@ -24,11 +24,10 @@ class bitstring:
         else:
             high_i = slicing.start if slicing.start != None else self.width-1
             low_i  = slicing.stop if slicing.stop != None else 0
-        
-        if type(item) is  int:
-            bit_length = item.bit_length()
-        else:
-            bit_length = item.width
+
+
+        bit_length = item.bit_length()
+
 
         if high_i-low_i + 1 < bit_length:
             raise AttributeError("Can't assign bitstrings wider than the slice itself")
@@ -37,23 +36,35 @@ class bitstring:
 
         clear_mask = ~( (2**(high_i - low_i + 1)-1) << low_i )
         self._val &= clear_mask
-        if type(item) is int:
+        if isinstance(item, int):
            val = item % 2**(high_i-low_i+1) 
         else:
             val = item._val
         self._val |= val << low_i
         return self
 
-    
-    def sign(self):
+
+    def bit_length(self):
+        return self.width
+
+
+    def msb(self):
         return self[self.width-1] == bitstring(1,1) 
-
-
-    def val(self, signed=True):
+    
+    
+    def val(self, signed=False):
         if signed and self.sign():
             return -1 * self.complement(True)._val
         else:
             return self._val
+
+
+    def sign(self):
+        return self.msb()
+
+
+    def signed():
+        return self.val(True)
 
 
     def complement(self, two_s=True):
